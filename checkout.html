@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+    <h2 class="text-center mb-4">Checkout</h2>
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>PKR{{ '%.2f'|format(item.product.price) }}</td>
+                        <td>PKR{{ '%.2f'|format(item.quantity * item.product.price) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td><strong>PKR{{ '%.2f'|format(total) }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="payment_method" class="form-label">Payment Method</label>
+                <select class="form-select" id="payment_method" name="payment_method" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="debit_card">Debit Card</option>
+                    <option value="cash_on_delivery">Cash on Delivery</option>
+                    <option value="easy_paisa">EasyPaisa</option>
+                    <option value="jazz_cash">JazzCash</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirm Order</button>
+        </form>
+    {% else %}
+        <p class="text-center">Your cart is empty. <a href="{{ url_for('index') }}">Continue shopping</a></p>
+    {% endif %}
+{% endblock %}

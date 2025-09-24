@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            {% if product.image %}
+                <img src="{{ url_for('static', filename='images/' + product.image) }}" class="img-fluid" alt="{{ product.name }}">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" class="img-fluid" alt="Placeholder">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+            <p><strong>Price:</strong> PKR{{ product.price }}</p>
+            <p><strong>Category:</strong> {{ product.category }}</p>
+            <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="btn btn-success">Add to Cart</a>
+            {% if current_user.is_authenticated %}
+                <h3>Leave a Review</h3>
+                <form method="POST" action="{{ url_for('add_review', product_id=product.id) }}">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Comment</label>
+                        <textarea class="form-control" id="comment" name="comment" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating (1-5)</label>
+                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            {% endif %}
+            <h3>Reviews</h3>
+            {% for review in reviews %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p>{{ review.comment }}</p>
+                        <p>Rating: {{ review.rating }}/5 by {{ review.user_name }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

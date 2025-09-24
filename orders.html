@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Manage Order{% endblock %}
+{% block content %}
+    <h2 class="text-center mb-4">Manage Order #{{ order.id }}</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>PKR{{ '%.2f'|format(item.price) }}</td>
+                    <td>PKR{{ '%.2f'|format(item.quantity * item.price) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td><strong>PKR{{ '%.2f'|format(order.total) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status" required>
+                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
+                <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Status</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back</a>
+    </form>
+{% endblock %}
